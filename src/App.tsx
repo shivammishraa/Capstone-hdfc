@@ -2,13 +2,11 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './layouts/ProtectedRoute';
-import ErrorBoundary from './ErrorBoundary';
 
 function App() {
   return (
-    <ErrorBoundary>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+       <Routes>
+        <Route path="/" element={<Login />} />
         <Route
           path="/dashboard"
           element={
@@ -17,9 +15,10 @@ function App() {
               </ProtectedRoute>
           }
         />
-        <Route path="*" element={<div className="p-6">404 - Page Not Found</div>} />
+        <Route path="*" element={<div className="p-6"><h1>404 - Page Not Found</h1>
+        <p>Go To</p> <a href="/" className="text-blue-500 underline">Login</a>
+        </div>} />
       </Routes>
-    </ErrorBoundary>
   );
 }
 

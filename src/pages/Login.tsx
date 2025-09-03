@@ -1,26 +1,33 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../schemas/loginSchema";
+import type { LoginSchemaType } from "../schemas/loginSchema";
 import { useNavigate } from "react-router-dom";
+import {Input} from "@/components/ui/input";
 import { loginUser } from "../services/authService";
 import { toast } from "react-toastify";
-import logo from "../../public/HDFC_Life_Logo.svg";
+import { hashPassword } from "../utils/hashPassword";
+import logo from "/HDFC_Life_Logo.svg";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+  });
 
+  const onSubmit = async (data: LoginSchemaType) => {
     setLoading(true);
     try {
-      const token = await loginUser(email, password);
+      const hashedPassword = await hashPassword(data.password);
+      const token = await loginUser(data.email, hashedPassword);
       localStorage.setItem("token", token);
       toast.success("Login successful");
       navigate("/dashboard");
@@ -68,7 +75,7 @@ const Login = () => {
           />
         </header>
 
-        <main className="relative flex flex-1 items-center  justify-center px-4 ">
+        <main className="relative flex flex-1 items-center justify-center px-4">
           <div className="absolute inset-0 flex items-center justify-center z-0">
             <img
               src={logo}
@@ -78,7 +85,8 @@ const Login = () => {
           </div>
 
           <motion.form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
             className="relative z-10 w-full max-w-xl p-12 rounded-2xl border border-white/30 bg-white/10 backdrop-blur-l shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -95,13 +103,15 @@ const Login = () => {
               transition={{ delay: 0.2 }}
             >
               <label className="block mb-1 font-medium text-white">Email</label>
-              <input
+              <Input
                 type="email"
+                placeholder="Enter your email"
+                {...register("email")}
                 className="w-full px-4 py-2 border border-white/30 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
               />
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+              )}
             </motion.div>
 
             <motion.div
@@ -111,13 +121,15 @@ const Login = () => {
               transition={{ delay: 0.3 }}
             >
               <label className="block mb-1 font-medium text-white">Password</label>
-              <input
+              <Input
                 type="password"
+                placeholder="Enter your password"
+                {...register("password")}
                 className="w-full px-4 py-2 border border-white/30 rounded bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/40"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
               />
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+              )}
             </motion.div>
 
             <motion.button
@@ -131,19 +143,18 @@ const Login = () => {
             </motion.button>
           </motion.form>
         </main>
-
-        
       </div>
+
       <footer className="bg-white shadow py-4 mt-auto">
-          <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-            <p>© {new Date().getFullYear()} HDFC Life. All rights reserved.</p>
-            <div className="flex space-x-4 mt-2 md:mt-0">
-              <span className="cursor-pointer hover:text-gray-700">Privacy Policy</span>
-              <span className="cursor-pointer hover:text-gray-700">Terms of Service</span>
-              <span className="cursor-pointer hover:text-gray-700">Contact Us</span>
-            </div>
+        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+          <p>© {new Date().getFullYear()} HDFC Life. All rights reserved.</p>
+          <div className="flex space-x-4 mt-2 md:mt-0">
+            <span className="cursor-pointer hover:text-gray-700">Privacy Policy</span>
+            <span className="cursor-pointer hover:text-gray-700">Terms of Service</span>
+            <span className="cursor-pointer hover:text-gray-700">Contact Us</span>
           </div>
-        </footer>
+        </div>
+      </footer>
     </motion.div>
   );
 };
