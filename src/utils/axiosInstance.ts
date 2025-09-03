@@ -1,7 +1,14 @@
 import axios from 'axios';
 
+// const axiosInstance = axios.create({
+//   // baseURL: import.meta.env.VITE_API_BASE_URL, // e.g. https://api.example.com
+//   baseURL: localhost:8080
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // e.g. https://api.example.com
+  baseURL: "http://10.64.156.46:8080",
   headers: {
     'Content-Type': 'application/json',
   },

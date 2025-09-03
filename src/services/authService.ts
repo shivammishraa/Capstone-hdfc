@@ -1,7 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 
-export const loginUser = async (email: string, password: string): Promise<string> => {
-  const response = await axiosInstance.post('/login', { email, password });
+export const loginUser = async (name: string, password: string): Promise<string> => {
+  const response = await axiosInstance.post('/auth/login', { name, password });
   return response.data.token;
 };
 
@@ -15,6 +15,6 @@ export const validateToken = async (): Promise<boolean> => {
 };
 
 export const logoutUser = async (): Promise<void> => {
-  await axiosInstance.post('/logout');
+  await axiosInstance.post('/auth/logout');
   localStorage.removeItem('token');
 };
