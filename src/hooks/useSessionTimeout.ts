@@ -13,7 +13,7 @@ const useSessionTimeout = (timeoutMs: number = 10000) => {
     timerRef.current = setTimeout(() => {
       dispatch(logout());
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/';
     }, timeoutMs);
   };
 

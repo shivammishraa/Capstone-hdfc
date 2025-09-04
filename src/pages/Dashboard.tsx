@@ -1,7 +1,15 @@
+
+// import { useNavigate } from "react-router-dom";
 // import Navbar from "../components/Dashboard/Navbar.tsx";
 
-
 // export default function Dashboard() {
+//   const navigate = useNavigate();
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("token");
+//     navigate("/");
+//   };
+
 //   return (
 //     <div className="flex h-screen bg-gray-100">
 //       {/* Sidebar */}
@@ -18,7 +26,10 @@
 //             Settings
 //           </a>
 //         </nav>
-//         <button className="m-4 p-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+//         <button
+//           onClick={handleLogout}
+//           className="m-4 p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+//         >
 //           Logout
 //         </button>
 //       </aside>
@@ -26,7 +37,7 @@
 //       {/* Main Content */}
 //       <main className="flex-1 p-6">
 //         {/* Profile Section */}
-//         <div className=" flex items-center space-x-4">
+//         <div className="flex items-center space-x-4">
 //           <Navbar />
 //         </div>
 
@@ -43,12 +54,18 @@
 
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Dashboard/Navbar.tsx";
+import useSessionTimeout from "../hooks/useSessionTimeout"; // ✅ import the hook
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  // ⏱️ Trigger logout after 10s inactivity
+  useSessionTimeout(10000);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/");
   };
 
@@ -88,6 +105,10 @@ export default function Dashboard() {
           <div className="bg-white p-6 rounded-xl shadow">Card 1</div>
           <div className="bg-white p-6 rounded-xl shadow">Card 2</div>
         </div>
+
+        <p className="mt-6 text-gray-500 text-sm">
+          ⚡ You will be logged out automatically after 10s of inactivity.
+        </p>
       </main>
     </div>
   );
