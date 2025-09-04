@@ -6,9 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { loginUser } from "../services/authService";
 import { toast } from "react-toastify";
-import logo from "/HDFC_Life_Logo.svg";
+import logo from "../../public/HDFC_Life_Logo.svg";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { encryptPassword } from "../utils/encryptedPassword";
+
+// Redux
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/authSlice";
 
@@ -29,10 +32,11 @@ const Login = () => {
   const onSubmit = async (data: LoginSchemaType) => {
     setLoading(true);
     try {
-      const res = await loginUser(data.name, data.password);
+      const encrypted = encryptPassword(data.password);
+
+      const res = await loginUser(data.name, encrypted);
 
       if (res?.accessToken) {
-
         dispatch(
           loginSuccess({
             accessToken: res.accessToken,
@@ -135,8 +139,9 @@ const Login = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <label className="block mb-1 font-medium text-white">Username</label>
+              <label htmlFor = 'Username' className="block mb-1 font-medium text-white">Username</label>
               <Input
+                id="username" 
                 type="string"
                 placeholder="Enter your username"
                 {...register("name")}
