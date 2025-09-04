@@ -1,11 +1,10 @@
-
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import Navbar from "../components/Dashboard/Navbar.tsx";
 import useSessionTimeout from "../hooks/useSessionTimeout";
 import { useState } from "react";
-import { fetchAllUsers } from "..//services/authService.ts"; // adjust path
+import { fetchAllUsers } from "../services/authService.ts"; // adjust path
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useSessionTimeout(100000000);
+  useSessionTimeout(10000);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -75,11 +74,32 @@ export default function Dashboard() {
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           {users.length > 0 && (
-            <ul className="list-disc pl-5 text-gray-700 text-sm space-y-1">
-              {users.map((user, idx) => (
-                <li key={idx}>{JSON.stringify(user)}</li>
-              ))}
-            </ul>
+            <div className="overflow-x-auto">
+              <table className="w-full border border-gray-200 rounded-lg">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">ID</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Username</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Role</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
+                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Phone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.id} className="border-t hover:bg-gray-50">
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.id}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.name}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.username}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.role}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.email}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600">{user.phone}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
