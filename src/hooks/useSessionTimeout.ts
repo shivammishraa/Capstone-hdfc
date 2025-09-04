@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import type { RootState } from '../redux/store';
 
-const useSessionTimeout = (timeoutMs: number = 10000) => {
+const useSessionTimeout = (timeoutMs: number = 500000000000) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -11,6 +11,8 @@ const useSessionTimeout = (timeoutMs: number = 10000) => {
   const resetTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       dispatch(logout());
       localStorage.removeItem('token');
       window.location.href = '/';

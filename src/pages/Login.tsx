@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import logo from "/HDFC_Life_Logo.svg";
 import { motion } from "framer-motion";
 import { useState } from "react";
-
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/authSlice";
 
