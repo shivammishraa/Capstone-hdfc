@@ -1,9 +1,33 @@
 import axiosInstance from '../utils/axiosInstance';
 
-export const loginUser = async (name: string, password: string): Promise<string> => {
-  const response = await axiosInstance.post('/auth/login', { name, password });
-  return response.data.token;
+// export const loginUser = async (username: string, password: string): Promise<string> => {
+//   const response = await axiosInstance.post('/auth/login', { username, password });
+//   console.log("The response", response)
+//   return response.data.token;
+// };
+
+// services/authService.ts
+
+
+export const loginUser = async (username: string, password: string) => {
+  try {
+    const res = await axiosInstance.post("/auth/login", {
+      username,
+      password,
+    });
+
+    return res.data; // contains token, message
+  } catch (error: any) {
+    if (error.response) {
+      throw {
+        status: error.response.status,
+        message: error.response.data?.message || "Something went wrong",
+      };
+    }
+    throw { status: 500, message: "Server not reachable" };
+  }
 };
+
 
 export const validateToken = async (): Promise<boolean> => {
   try {

@@ -5,20 +5,20 @@ import ProtectedRoute from './layouts/ProtectedRoute';
 
 function App() {
   return (
-       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-              </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<div className="p-6"><h1>404 - Page Not Found</h1>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<div className="p-6"><h1>404 - Page Not Found</h1>
         <p>Go To</p> <a href="/" className="text-blue-500 underline">Login</a>
-        </div>} />
-      </Routes>
+      </div>} />
+    </Routes>
   );
 }
 
