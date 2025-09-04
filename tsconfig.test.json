@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "allowJs": true,
+    "types": ["jest","jest-mock", "@testing-library/jest-dom", "node"]
+  },
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "tests/setup.ts",
+    "tests/global.d.ts"  
+  ],
+  "exclude": ["node_modules"]
+}
